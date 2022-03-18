@@ -1,7 +1,10 @@
-import time
 from bluepy.btle import Peripheral, UUID
 from bluepy.btle import Scanner, DefaultDelegate
 
+import struct
+INDIC_ON = struct.pack('<bb', 0x02, 0x00)
+NOTIF_ON = struct.pack('<bb', 0x01, 0x00)
+NOTIF_OFF = struct.pack('<bb', 0x00, 0x00)
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
@@ -76,12 +79,12 @@ try:
         print("Enable notifications......")
     if enableIndicate:
         # setup to enable indications
-        dev.writeCharacteristic(cccd, b"\x02")
+        dev.writeCharacteristic(cccd, INDIC_ON)
         print("Enable indications......")
 
     while True:
-        if dev.waitForNotifications(1.0):
-            # handleNotification() was called   
+        if dev.waitForNotifications(3.0):
+            print("Test Notification") 
             continue
         print("Waiting")
 
