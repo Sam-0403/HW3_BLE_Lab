@@ -52,7 +52,7 @@ for dev in devices:
 			print ("%s, %s" % (desc, value))
 number = input('Enter your device number: ')
 print('Device', number)
-print(devices[number].addr)
+print(devices[int(number)].addr)
 
 print ("Connecting...")
 dev = Peripheral(devices[number].addr, 'random')
