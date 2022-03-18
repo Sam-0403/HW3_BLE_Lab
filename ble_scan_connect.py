@@ -59,16 +59,16 @@ try:
     for ch in testService.getCharacteristics():
         print(str(ch))
 
-    ch = dev.getCharacteristics(uuid=UUID(0xfff4))[1]
+    ch = dev.getCharacteristics(uuid=UUID(0xfff4))[0]
     print("ch:", ch)
     print("support:", ch.supportsRead())
     if (ch.supportsRead()):
         print(ch.read())
 
     # --------- add CCCD operation --------
-    print(ch.getHandle())
-    write_handle = ch.getHandle()
-    cccd = ch.getHandle() + 1
+    print(ch.valHandle)
+    # write_handle = ch.getHandle()
+    cccd = ch.valHandle + 1
 
     if enableNotify:
         # setup to enable notifications
@@ -78,8 +78,6 @@ try:
         # setup to enable indications
         dev.writeCharacteristic(cccd, b"\x02")
         print("Enable indications......")
-
-    time.sleep(1.0)
 
     while True:
         if dev.waitForNotifications(1.0):
