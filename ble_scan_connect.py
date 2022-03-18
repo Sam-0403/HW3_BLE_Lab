@@ -1,3 +1,4 @@
+import time
 from bluepy.btle import Peripheral, UUID
 from bluepy.btle import Scanner, DefaultDelegate
 
@@ -65,8 +66,9 @@ try:
         print(ch.read())
 
     # --------- add CCCD operation --------
-    print(ch.valHandle)
-    cccd = ch.valHandle + 1
+    print(ch.getHandle())
+    write_handle = ch.getHandle()
+    cccd = ch.getHandle() + 1
 
     if enableNotify:
         # setup to enable notifications
@@ -74,14 +76,17 @@ try:
         print("Enable notifications......")
     if enableIndicate:
         # setup to enable indications
-        dev.writeCharacteristic(cccd, b"\x02\x00")
+        dev.writeCharacteristic(cccd, b"\x02\x00", withResponse=True)
         print("Enable indications......")
+
+    time.sleep(1.0)
 
     while True:
         if dev.waitForNotifications(1.0):
-            # handleNotification() was called
+            # handleNotification() was called   
             continue
         print("Waiting")
+        dev.writeCharacteristic( write_handle, bytes("A"), False )
 
 finally:
     dev.disconnect()
