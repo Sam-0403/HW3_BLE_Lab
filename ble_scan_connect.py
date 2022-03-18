@@ -76,7 +76,7 @@ try:
         print("Enable notifications......")
     if enableIndicate:
         # setup to enable indications
-        dev.writeCharacteristic(cccd, b"\x02\x00", withResponse=True)
+        dev.writeCharacteristic(cccd, b"\x02\x00")
         print("Enable indications......")
 
     time.sleep(1.0)
