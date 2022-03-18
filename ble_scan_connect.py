@@ -59,7 +59,7 @@ try:
     for ch in testService.getCharacteristics():
         print(str(ch))
 
-    ch = dev.getCharacteristics(uuid=UUID(0xfff4))[0]
+    ch = dev.getCharacteristics(uuid=UUID(0xfff4))[1]
     print("ch:", ch)
     print("support:", ch.supportsRead())
     if (ch.supportsRead()):
@@ -72,11 +72,11 @@ try:
 
     if enableNotify:
         # setup to enable notifications
-        dev.writeCharacteristic(cccd, b"\x01\x00")
+        dev.writeCharacteristic(cccd, b"\x01")
         print("Enable notifications......")
     if enableIndicate:
         # setup to enable indications
-        dev.writeCharacteristic(cccd, b"\x02\x00")
+        dev.writeCharacteristic(cccd, b"\x02")
         print("Enable indications......")
 
     time.sleep(1.0)
