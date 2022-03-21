@@ -55,7 +55,7 @@ print('Device', number)
 print(devices[int(number)].addr)
 
 print ("Connecting...")
-dev = Peripheral(devices[number].addr, 'random')
+dev = Peripheral(devices[int(number)].addr, 'random')
 
 print ("Services...")
 for svc in dev.services:
