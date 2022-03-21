@@ -65,7 +65,7 @@ try:
 	ch = dev.getCharacteristics(uuid=UUID(CHAR_UUID))[0] # = ch.valHandle
 	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") # test writeCharacteristic
 	custom_service_handle_cccd = ch.valHandle + 1
-	dev.writeCharacteristic(custom_service_handle_cccd, NOTIF_ON)
+	dev.writeCharacteristic(custom_service_handle_cccd, INDIC_ON)
 	dev = dev.withDelegate(PeripheralDelegate(custom_service_handle_cccd))
 
 	while True:
