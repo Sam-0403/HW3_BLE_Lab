@@ -1,14 +1,14 @@
 from bluepy.btle import Peripheral, UUID
-from bluepy.btle import Scanner, DefaultDelegate
+from bluepy.btle import Scanner, DefaultDelegate, AssignedNumbers
 import struct
-INDIC_ON = struct.pack('<bb', 0x02, 0x00)
-NOTIF_ON = struct.pack('<bb', 0x01, 0x00)
-NOTIF_OFF = struct.pack('<bb', 0x00, 0x00)
+INDIC_ON = struct.pack('BB', 0x02, 0x00)
+NOTIF_ON = struct.pack('BB', 0x01, 0x00)
+NOTIF_OFF = struct.pack('BB', 0x00, 0x00)
 
 # user config
 DEVICE_NAME = "Heart Rate"
 SERVICE_UUID = 0xfff0
-CHAR_UUID = 0xfff2
+CHAR_UUID = 0xfff4
 
 class ScanDelegate(DefaultDelegate):
 	"""
@@ -52,20 +52,26 @@ for dev in devices:
 			print ("%s, %s" % (desc, value))
 number = input('Enter your device number: ')
 print('Device', number)
-print(devices[int(number)].addr)
+print(list(devices)[int(number)].addr)
 
 print ("Connecting...")
-dev = Peripheral(devices[int(number)].addr, 'random')
+dev = Peripheral(list(devices)[int(number)].addr, 'random')
 
 print ("Services...")
 for svc in dev.services:
 	print (str(svc))
 try:
 	print (str(dev.getServiceByUUID(UUID(SERVICE_UUID))))
-	ch = dev.getCharacteristics(uuid=UUID(CHAR_UUID))[0] # = ch.valHandle
-	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") # test writeCharacteristic
+	ch = dev.getCharacteristics(uuid=UUID(CHAR_UUID))[0] # writeHandle = ch.valHandle
+	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") # Test writeCharacteristic
+
+	# custom_service_handle_cccd = ch.valHandle + 1
+	# dev.writeCharacteristic(custom_service_handle_cccd, INDIC_ON)	# Can't work
+	desc = ch.getDescriptors(AssignedNumbers.client_characteristic_configuration)
+	print(str(desc))
+	dev.writeCharacteristic(desc[0].handle, INDIC_ON) # test writeCharacteristic
+
 	custom_service_handle_cccd = ch.valHandle + 1
-	dev.writeCharacteristic(custom_service_handle_cccd, INDIC_ON)
 	dev = dev.withDelegate(PeripheralDelegate(custom_service_handle_cccd))
 
 	while True:
