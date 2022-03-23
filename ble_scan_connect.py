@@ -8,7 +8,7 @@ NOTIF_OFF = struct.pack('<bb', 0x00, 0x00)
 # user config
 DEVICE_NAME = "Heart Rate"
 SERVICE_UUID = 0xfff0
-CHAR_UUID = 0xfff1
+CHAR_UUID = 0xfff2
 
 class ScanDelegate(DefaultDelegate):
 	"""
