@@ -1,6 +1,9 @@
 HW3 BLE Lab
 ===
 
+# 目標
+透過Mobile作為GATT Server，並透過RaspberryPi作為GATT Client來傳送資料、修改Server端的 **CCCD** (Client Characteristic Configuration Descriptor)，可以將CCCD設為Notification、Indication等不同模式，並接收對應的訊息。
+
 # How to Run Code（For Linux）
 
 ## 安裝相關模組
@@ -29,10 +32,6 @@ sudo -E python3 {PROGRAM_PATH}
 
 ## 相關C BLE Interfaces
 * [Gattlib](https://github.com/labapart/gattlib)
-
-
-# 目標
-透過Mobile作為GATT Server，並透過RaspberryPi作為GATT Client來傳送資料、修改Server端的 **CCCD** (Client Characteristic Configuration Descriptor)，可以將CCCD設為Notification、Indication等不同模式，並接收對應的訊息。
 
 # 相關設定
 
