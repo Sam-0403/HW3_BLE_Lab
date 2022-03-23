@@ -59,4 +59,5 @@ CHAR_UUID = {對應Characteristic的UUID}
 # 程式效果
 本次使用Android Mobile中的BLE Tool -> GATT Server
 透過Show Log可以看到CCCD已被修改的訊息。
+
 關於IOS可以透過LightBlue作為GATT Server，但無法透過程式修改對應Service的CCCD。
