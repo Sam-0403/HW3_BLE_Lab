@@ -52,8 +52,9 @@ CHAR_UUID = {對應Characteristic的UUID}
 4. 開啟連線、Device=Peripheral(...)
 5. 列出當前Service
 6. 取得對應的Characteristic
-7. 取得CCCD的Descripter，並進行修改
-8. 開始接收來自Server的訊息直到斷開連線
+7. 取得CCCD的Descriptor，並進行修改
+8. 修改Service的Delegate，配合Notification的功能
+9. 開始接收來自Server的訊息直到斷開連線
 
 # 程式效果
 本次使用Android Mobile中的BLE Tool -> GATT Server
