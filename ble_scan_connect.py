@@ -5,14 +5,14 @@ INDIC_ON = struct.pack('BB', 0x02, 0x00)
 NOTIF_ON = struct.pack('BB', 0x01, 0x00)
 NOTIF_OFF = struct.pack('BB', 0x00, 0x00)
 
-# user config
+# user configuration
 DEVICE_NAME = "Heart Rate"
 SERVICE_UUID = 0xfff0
 CHAR_UUID = 0xfff4
 
 # DefaultDelegate: to receive Bluetooth message asynchronously
 
-# Scanner: to scan for BLE devices which are broadcasting data
+# ScanDelegate: to scan for BLE devices which are broadcasting data
 class ScanDelegate(DefaultDelegate):
 	def __init__(self):
 		DefaultDelegate.__init__(self)
@@ -22,6 +22,7 @@ class ScanDelegate(DefaultDelegate):
 		elif isNewData:
 			print("Received new data from", dev.addr)
 
+# PeripheralDelegate: to handle notification from BLE server
 class PeripheralDelegate(DefaultDelegate):
 	def __init__(self, handle):
 		DefaultDelegate.__init__(self)
@@ -85,18 +86,16 @@ try:
 		number = input('Enter your characteristic number: ')
 		print('Characteristic', number)
 		ch = list(characteristics)[int(number)]
-		# print(ch_uuid)
-		# ch = service.getCharacteristics(UUID(ch_uuid))
 		print (str(ch))
 		
-	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") 		# Test writeCharacteristic
+	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") 	# Test writeCharacteristic
 
 	# custom_service_handle_cccd = ch.valHandle + 1
 	# dev.writeCharacteristic(custom_service_handle_cccd, INDIC_ON)	# Can't work
 
 	desc = ch.getDescriptors(AssignedNumbers.client_characteristic_configuration)
 	print(str(desc))
-	dev.writeCharacteristic(desc[0].handle, INDIC_ON) # test writeCharacteristic
+	dev.writeCharacteristic(desc[0].handle, INDIC_ON) 	# To Modify CCCD
 
 	custom_service_handle_cccd = ch.valHandle + 1
 	dev = dev.withDelegate(PeripheralDelegate(custom_service_handle_cccd))
