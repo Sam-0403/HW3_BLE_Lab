@@ -10,12 +10,10 @@ DEVICE_NAME = "Heart Rate"
 SERVICE_UUID = 0xfff0
 CHAR_UUID = 0xfff4
 
+# DefaultDelegate: to receive Bluetooth message asynchronously
+
+# Scanner: to scan for BLE devices which are broadcasting data
 class ScanDelegate(DefaultDelegate):
-	"""
-	DefaultDelegate receive Bluetooth message asynchronously, 
-	Scanner is to scan for LE devices which are broadcasting data
-	withDelegate stores a reference to a delegate object, which receives callbacks when broadcasts from devices are received
-	"""
 	def __init__(self):
 		DefaultDelegate.__init__(self)
 	def handleDiscovery(self, dev, isNewDev, isNewData):
@@ -29,14 +27,12 @@ class PeripheralDelegate(DefaultDelegate):
 		DefaultDelegate.__init__(self)
 		print("handleNotification init")
 		self.hndl = handle
-		# ... initialise here
 
 	def handleNotification(self, cHandle, data):
-	# ... perhaps check cHandle
 		print(cHandle)
 		print(data)
-	# ... process 'data'
 
+# withDelegate: to stores a reference to a delegate object, which receives callbacks when broadcasts from devices are received
 scanner = Scanner().withDelegate(ScanDelegate()) 
 devices = scanner.scan(3.0)
 n = 0
@@ -50,6 +46,7 @@ for dev in devices:
 			print('===============================')
 		else:
 			print ("%s, %s" % (desc, value))
+
 number = input('Enter your device number: ')
 print('Device', number)
 print(list(devices)[int(number)].addr)
@@ -57,16 +54,46 @@ print(list(devices)[int(number)].addr)
 print ("Connecting...")
 dev = Peripheral(list(devices)[int(number)].addr, 'random')
 
-print ("Services...")
-for svc in dev.services:
-	print (str(svc))
+mode = input('Choose the mode: (1: default; else: custom)')
 try:
-	print (str(dev.getServiceByUUID(UUID(SERVICE_UUID))))
-	ch = dev.getCharacteristics(uuid=UUID(CHAR_UUID))[0] # writeHandle = ch.valHandle
-	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") # Test writeCharacteristic
+	if mode=="1":
+		print ("Services...")
+		for service in dev.services:
+			print (str(service))
+		print (str(dev.getServiceByUUID(UUID(SERVICE_UUID))))
+		ch = dev.getCharacteristics(uuid=UUID(CHAR_UUID))[0] 	# writeHandle = ch.valHandle or ch.getHandle()
+	else:
+		print ("Services...")
+		n = 0
+		services = dev.services
+		for service in services:
+			print (str(n)+": "+str(service))
+			n+=1
+		number = input('Enter your service number: ')
+		print('Service', number)
+		service_uuid = list(services)[int(number)].uuid
+		print(service_uuid)
+		service = dev.getServiceByUUID(UUID(service_uuid))
+		print (str(service))
+
+		print ("Characteristics...")
+		n = 0
+		characteristics = service.getCharacteristics()
+		for ch in characteristics:
+			print (str(n)+": "+str())
+			n+=1
+		number = input('Enter your characteristic number: ')
+		print('Characteristic', number)
+		ch_uuid = list(characteristics)[int(number)].uuid
+		print(ch_uuid)
+		ch = service.getServiceByUUID(UUID(ch_uuid))
+		print (str(ch))
+		
+	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") 		# Test writeCharacteristic
 
 	# custom_service_handle_cccd = ch.valHandle + 1
 	# dev.writeCharacteristic(custom_service_handle_cccd, INDIC_ON)	# Can't work
+
 	desc = ch.getDescriptors(AssignedNumbers.client_characteristic_configuration)
 	print(str(desc))
 	dev.writeCharacteristic(desc[0].handle, INDIC_ON) # test writeCharacteristic
@@ -79,5 +106,6 @@ try:
 			print("Test Notification")
 			continue
 		print ("Waiting...")
+	
 finally:
 	dev.disconnect()
