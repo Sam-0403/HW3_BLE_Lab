@@ -80,13 +80,13 @@ try:
 		n = 0
 		characteristics = service.getCharacteristics()
 		for ch in characteristics:
-			print (str(n)+": "+str())
+			print (str(n)+": "+str(ch))
 			n+=1
 		number = input('Enter your characteristic number: ')
 		print('Characteristic', number)
-		ch_uuid = list(characteristics)[int(number)].uuid
-		print(ch_uuid)
-		ch = service.getServiceByUUID(UUID(ch_uuid))
+		ch = list(characteristics)[int(number)]
+		# print(ch_uuid)
+		# ch = service.getCharacteristics(UUID(ch_uuid))
 		print (str(ch))
 		
 	dev.writeCharacteristic(ch.valHandle, b"\x65\x66") 		# Test writeCharacteristic
